@@ -1,7 +1,42 @@
+// 1. Bootstrap helpers (needed to customise $spacers)
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
+// 2. Variable overrides
+$spacers: map-merge(
+  $spacers,
+  (
+    4: 2rem,
+    6: 3.8rem,
+  )
+);
+
+// 3. Bootstrap itself (single source: no separate bootstrap.min.css && bootstrap-icons.min.css import)
 @import "bootstrap/scss/bootstrap";
+@import "bootstrap-icons/font/bootstrap-icons.min.css";
 
-$color: red;
+// 4. Custom styles
+* {
+  padding: 0 !important;
+  margin: 0 !important;
+  letter-spacing: 1px;
+}
 
-h1 {
-  color: $color;
+.navbar {
+  --bs-navbar-active-color: var(--bs-cyan);
+}
+
+// 1 column on mobile, 2 on tablet, 3 on desktop
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (min-width: 992px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
 }

@@ -1,14 +1,22 @@
+import { BrowserRouter, Route, Routes } from "react-router";
+import { ROUTES } from "./constants/routes";
+import HomePage from "./pages/HomePage";
+import TodosPage from "./pages/TodosPage";
+import MainLayout from "./layouts/MainLayout";
+import NotFoundPage from "./pages/NotFoundPage";
+
 const App = () => {
   return (
     <>
-      <h1>hello would</h1>
-      {/* <BrowserRouter>
-      <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-      </BrowserRouter> */}
+      <BrowserRouter>
+        <Routes>
+          <Route element={<MainLayout />}>
+            <Route path={ROUTES.home} element={<HomePage />} />
+            <Route path={ROUTES.todos} element={<TodosPage />} />
+            <Route path="*/:id" element={<NotFoundPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
   );
 };
