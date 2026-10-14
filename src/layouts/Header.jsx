@@ -4,7 +4,7 @@ import { ROUTES } from "../constants/routes";
 
 const NAV_ITEMS = [
   { label: "Home", to: ROUTES.home, end: true },
-  { label: "Todes", to: ROUTES.todos },
+  { label: "Todos", to: ROUTES.todos },
 ];
 
 const Header = () => (

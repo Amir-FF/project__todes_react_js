@@ -11,14 +11,14 @@ $spacers: map-merge(
   )
 );
 
-// 3. Bootstrap itself (single source: no separate bootstrap.min.css && bootstrap-icons.min.css import)
+// 3. Bootstrap itself (single source: no separate bootstrap.min.css / bootstrap-icons.min.css)
 @import "bootstrap/scss/bootstrap";
 @import "bootstrap-icons/font/bootstrap-icons.min.css";
 
 // 4. Custom styles
 * {
-  padding: 0 !important;
-  margin: 0 !important;
+  padding: 0;
+  margin: 0;
   letter-spacing: 1px;
 }
 

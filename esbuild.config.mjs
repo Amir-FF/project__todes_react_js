@@ -5,16 +5,29 @@ import fs from "node:fs";
 const isWatch = process.argv.includes("--watch");
 const isProd = process.argv.includes("--prod");
 
-fs.rmSync("dist", { recursive: true, force: true });
-fs.mkdirSync("dist", { recursive: true });
-fs.copyFileSync("public/index.html", "dist/index.html");
+const DIST_DIR = "dist";
+const DEV_PORT = 3000;
+const LIVE_RELOAD_SCRIPT = `<script>new EventSource('/esbuild').addEventListener('change', () => location.reload());</script>`;
 
-const options = {
+const prepareDist = () => {
+  fs.rmSync(DIST_DIR, { recursive: true, force: true });
+  fs.mkdirSync(DIST_DIR, { recursive: true });
+
+  let html = fs.readFileSync("public/index.html", "utf-8");
+
+  if (isWatch) {
+    html = html.replace("</body>", `${LIVE_RELOAD_SCRIPT}\n  </body>`);
+  }
+
+  fs.writeFileSync(`${DIST_DIR}/index.html`, html);
+};
+
+const buildOptions = {
   entryPoints: {
     "js/bundle": "src/main.jsx",
     "css/style": "src/styles/main.scss",
   },
-  outdir: "dist",
+  outdir: DIST_DIR,
   outbase: "src",
   assetNames: "[dir]/[name]-[hash]",
   bundle: true,
@@ -33,9 +46,7 @@ const options = {
   minify: isProd,
   sourcemap: !isProd,
   define: {
-    "process.env.NODE_ENV": JSON.stringify(
-      isProd ? "production" : "development",
-    ),
+    "process.env.NODE_ENV": JSON.stringify(isProd ? "production" : "development"),
   },
   plugins: [
     sassPlugin({
@@ -47,23 +58,20 @@ const options = {
   logLevel: "info",
 };
 
+prepareDist();
+
 if (isWatch) {
-  const ctx = await esbuild.context(options);
-  await ctx.watch();
-  const { port } = await ctx.serve({
-    servedir: "dist",
-    port: 3000,
-    fallback: "dist/index.html",
+  const context = await esbuild.context(buildOptions);
+  await context.watch();
+
+  const { port } = await context.serve({
+    servedir: DIST_DIR,
+    port: DEV_PORT,
+    fallback: `${DIST_DIR}/index.html`,
   });
+
   console.log(`\n🚀 Dev server: http://localhost:${port}\n`);
 } else {
-  await esbuild.build(options);
-  console.log("✅ Build finished → dist/");
+  await esbuild.build(buildOptions);
+  console.log(`✅ Build finished → ${DIST_DIR}/`);
 }
-
-let html = fs.readFileSync("public/index.html", "utf-8");
-if (isWatch) {
-  const liveReload = `<script>new EventSource('/esbuild').addEventListener('change', () => location.reload());</script>`;
-  html = html.replace("</body>", `${liveReload}\n  </body>`);
-}
-fs.writeFileSync("dist/index.html", html);

@@ -1,24 +1,23 @@
 import { BrowserRouter, Route, Routes } from "react-router";
+import { ToastContainer } from "react-toastify";
 import { ROUTES } from "./constants/routes";
-import HomePage from "./pages/HomePage";
-import TodosPage from "./pages/TodosPage";
 import MainLayout from "./layouts/MainLayout";
+import HomePage from "./pages/HomePage";
 import NotFoundPage from "./pages/NotFoundPage";
+import TodosPage from "./pages/TodosPage";
 
-const App = () => {
-  return (
-    <>
-      <BrowserRouter>
-        <Routes>
-          <Route element={<MainLayout />}>
-            <Route path={ROUTES.home} element={<HomePage />} />
-            <Route path={ROUTES.todos} element={<TodosPage />} />
-            <Route path="*/:id" element={<NotFoundPage />} />
-          </Route>
-        </Routes>
-      </BrowserRouter>
-    </>
-  );
-};
+const App = () => (
+  <BrowserRouter>
+    <Routes>
+      <Route element={<MainLayout />}>
+        <Route path={ROUTES.home} element={<HomePage />} />
+        <Route path={ROUTES.todos} element={<TodosPage />} />
+        <Route path="*" element={<NotFoundPage />} />
+      </Route>
+    </Routes>
+
+    <ToastContainer position="top-center" closeOnClick={false} draggable />
+  </BrowserRouter>
+);
 
 export default App;
