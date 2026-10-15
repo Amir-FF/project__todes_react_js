@@ -23,3 +23,15 @@ React + esbuild + Bootstrap + SCSS + ESLint
       pages/      # HomePage, TodosPage, NotFoundPage
       services/   # todoService (fetch wrapper for the API)
       styles/     # main.scss
+
+## Deploy (Cloudflare)
+
+- Build command: `npm run build`
+- Output directory: `dist`
+- SPA routing (so `/todos` works on refresh):
+  - **Pages** → uses `public/_redirects` (delete `wrangler.jsonc`)
+  - **Workers** → uses `wrangler.jsonc` (delete `public/_redirects`)
+
+## 🚀 Live Demo
+
+You can view the live version of this project here: [**View Live Site**](https://project-todes-react-js.amir-computer-04-ir.workers.dev/)

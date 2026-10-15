@@ -13,6 +13,9 @@ const prepareDist = () => {
   fs.rmSync(DIST_DIR, { recursive: true, force: true });
   fs.mkdirSync(DIST_DIR, { recursive: true });
 
+  // copy everything in public/ (_redirects, favicon, ...) into dist/
+  fs.cpSync("public", DIST_DIR, { recursive: true });
+
   let html = fs.readFileSync("public/index.html", "utf-8");
 
   if (isWatch) {
