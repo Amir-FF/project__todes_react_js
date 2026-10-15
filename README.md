@@ -24,13 +24,15 @@ React + esbuild + Bootstrap + SCSS + ESLint
       services/   # todoService (fetch wrapper for the API)
       styles/     # main.scss
 
-## Deploy (Cloudflare)
+## Deploy (Cloudflare Workers)
 
 - Build command: `npm run build`
+- Deploy command: `npx wrangler deploy`
 - Output directory: `dist`
-- SPA routing (so `/todos` works on refresh):
-  - **Pages** → uses `public/_redirects` (delete `wrangler.jsonc`)
-  - **Workers** → uses `wrangler.jsonc` (delete `public/_redirects`)
+- SPA routing (so `/todos` works on refresh) is handled by `not_found_handling`
+  in `wrangler.jsonc`. Do **not** add a `public/_redirects` catch-all
+  (`/* /index.html 200`): Workers rejects it as an infinite loop.
+- `name` in `wrangler.jsonc` must match the Worker name in the Cloudflare dashboard.
 
 ## 🚀 Live Demo
 

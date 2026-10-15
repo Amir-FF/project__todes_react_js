@@ -1,6 +1,7 @@
 import * as esbuild from "esbuild";
 import { sassPlugin } from "esbuild-sass-plugin";
 import fs from "node:fs";
+import path from "node:path";
 
 const isWatch = process.argv.includes("--watch");
 const isProd = process.argv.includes("--prod");
@@ -13,8 +14,14 @@ const prepareDist = () => {
   fs.rmSync(DIST_DIR, { recursive: true, force: true });
   fs.mkdirSync(DIST_DIR, { recursive: true });
 
-  // copy everything in public/ (_redirects, favicon, ...) into dist/
-  fs.cpSync("public", DIST_DIR, { recursive: true });
+  // copy everything in public/ (favicon, images, ...) into dist/.
+  // `_redirects` is skipped on purpose: Workers rejects the SPA catch-all
+  // (`/* /index.html 200`) as an infinite loop; routing is handled by
+  // `not_found_handling` in wrangler.jsonc instead.
+  fs.cpSync("public", DIST_DIR, {
+    recursive: true,
+    filter: (source) => path.basename(source) !== "_redirects",
+  });
 
   let html = fs.readFileSync("public/index.html", "utf-8");
 
