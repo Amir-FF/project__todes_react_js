@@ -56,7 +56,9 @@ const buildOptions = {
   minify: isProd,
   sourcemap: !isProd,
   define: {
-    "process.env.NODE_ENV": JSON.stringify(isProd ? "production" : "development"),
+    "process.env.NODE_ENV": JSON.stringify(
+      isProd ? "production" : "development",
+    ),
   },
   plugins: [
     sassPlugin({
